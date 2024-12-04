@@ -87,7 +87,7 @@ names(dlist41) <- names(dlist41)
 #################################
 #Define the lagged parameters
 logknots  <- logknots(0:6,df=3)
-arglag=list(fun="ns",knots=logknots)
+arglag  <- list(fun="ns",knots=logknots)
 
 #Define the cross basis
 cross_basis <- function(sub, variable, arglag) {
@@ -137,11 +137,11 @@ variable_names <- c("HDW", "HNW", "COM")
 
 #meta infos
 infos<-read.csv("D:/.../metacities_infos.csv")
-info_pred <- data.frame(meantemp=mean(infos1$meantemp),
-                        gdp_city=mean(infos1$gdp_city),
-                        kgclzone=names(which(table(infos1$kgclzone) == max(table(infos1$kgclzone)))),
-                        Population=mean(infos1$Population),
-                        Trange=mean(infos1$Trange))
+info_pred <- data.frame(meantemp=mean(infos$meantemp),
+                        gdp_city=mean(infos$gdp_city),
+                        kgclzone=names(which(table(infos$kgclzone) == max(table(infos$kgclzone)))),
+                        Population=mean(infos$Population),
+                        Trange=mean(infos$Trange))
 
 ##HW distribution in all cities
 datax<-bind_rows(dlist41)
@@ -167,7 +167,7 @@ est1<-est2<-est3<-matrix(NA,3,3)
 coef<-yall<-matrix(NA,28,3)
 vcov<-Sall<-vector("list",28)
 total<-vector()
-burden<-matrix(NA,12,1)
+burden<-matrix(NA,3,1)
 
 for (t in 1:3) {
   j<-0;
