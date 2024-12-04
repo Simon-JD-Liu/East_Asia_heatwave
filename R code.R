@@ -163,11 +163,12 @@ xvar3<-datax$COM
 #East Asia
 #############
 xlag  <- 0:600/10
-est1<-est2<-est3<-matrix(NA,12,1)
+est1<-est2<-est3<-matrix(NA,3,3)
 coef<-yall<-matrix(NA,28,3)
 vcov<-Sall<-vector("list",28)
 total<-vector()
 burden<-matrix(NA,12,1)
+
 for (t in 1:3) {
   j<-0;
   HW.basis1 <- HW.basis2 <- HW.basis3 <- NULL
@@ -190,13 +191,14 @@ for (t in 1:3) {
     coef[j,] <- coef(pred.hw)
     vcov[[j]] <- vcov(pred.hw)
     
-    eval(parse(text = paste0("crall<- crossreduce(HW.basis",t,",model,type='var',cen=0,value=quantile(sub[sub$HDW>0,]$HDW,0.9))")))
+    eval(parse(text = paste0("crall<- crossreduce(HW.basis",t,",model,type='var',cen=0,value=quantile(sub[sub$",variable_names[t],">0,]$",variable_names[t],",0.9,na.rm=T))")))
     yall[j,]  <- coef(crall)
     Sall[[j]] <- vcov(crall)
     
     total[j]<-sum(sub$all_tot)
     
   }
+  
   ##ER curves
   mv<-mvmeta(coef~meantemp+Trange+gdp_city+
                kgclzone+Population,vcov,
@@ -214,9 +216,9 @@ for (t in 1:3) {
   MMT<-round(as.numeric(names(which.min(all.cp$allfit))),1)
   print(MMT)
   
-  q90<-quantile(datax[datax$HDW>0,]$HDW,0.90,na.rm=T)
-  q95<-quantile(datax[datax$HDW>0,]$HDW,0.95,na.rm=T)
-  q99<-quantile(datax[datax$HDW>0,]$HDW,0.99,na.rm=T)
+  eval(parse(text = paste0("q90<-quantile(datax[datax$",variable_names[t],">0,]$",variable_names[t],",0.90,na.rm=T)")))
+  eval(parse(text = paste0("q95<-quantile(datax[datax$",variable_names[t],">0,]$",variable_names[t],",0.95,na.rm=T)")))
+  eval(parse(text = paste0("q99<-quantile(datax[datax$",variable_names[t],">0,]$",variable_names[t],",0.99,na.rm=T)")))
   eval(parse(text = paste0("all.cp<-crosspred(bvar,coef=mvpred$fit,vcov=mvpred$vcov,model.link='log',at=(predvar",t,",q90,q95,q99),cen=0)")))
   
   plot(all.cp, "overall", col = "#AD002AE5", cex.axis = 2.0, 
